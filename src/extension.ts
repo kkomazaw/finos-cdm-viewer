@@ -1,5 +1,8 @@
 import * as vscode from 'vscode';
 import { CdmTreeDataProvider, CdmTreeItem, TreeItemType } from './providers/CdmTreeDataProvider';
+import { RosettaHoverProvider } from './providers/RosettaHoverProvider';
+import { RosettaDefinitionProvider } from './providers/RosettaDefinitionProvider';
+import { SymbolIndexer } from './indexer/SymbolIndexer';
 import { RosettaType, RosettaEnum } from './models/RosettaAst';
 
 /**
@@ -21,6 +24,10 @@ export function activate(context: vscode.ExtensionContext) {
     // Set initial workspace context
     updateWorkspaceContext();
 
+    // Create symbol indexer
+    const symbolIndexer = new SymbolIndexer();
+    symbolIndexer.indexWorkspace();
+
     // Create tree data provider
     const treeDataProvider = new CdmTreeDataProvider();
 
@@ -35,6 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
     // Register refresh command
     context.subscriptions.push(
         vscode.commands.registerCommand('cdm.refreshExplorer', () => {
+            symbolIndexer.indexWorkspace();
             treeDataProvider.refresh();
             vscode.window.showInformationMessage('CDM Explorer refreshed');
         })
@@ -92,31 +100,29 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Register hover provider for Rosetta files
     context.subscriptions.push(
-        vscode.languages.registerHoverProvider('rosetta', {
-            provideHover(document, position) {
-                const range = document.getWordRangeAtPosition(position);
-                if (!range) {
-                    return null;
-                }
+        vscode.languages.registerHoverProvider('rosetta', new RosettaHoverProvider(symbolIndexer))
+    );
 
-                const word = document.getText(range);
-                // For now, provide basic hover info
-                // In the future, this can be enhanced to show type information from the index
-                return new vscode.Hover(`**${word}**\n\n*Type information will be available in future versions*`);
-            }
-        })
+    // Register definition provider for Rosetta files
+    context.subscriptions.push(
+        vscode.languages.registerDefinitionProvider('rosetta', new RosettaDefinitionProvider(symbolIndexer))
     );
 
     // Watch for changes to .rosetta files and refresh
     const fileWatcher = vscode.workspace.createFileSystemWatcher('**/*.rosetta');
 
-    fileWatcher.onDidCreate(() => {
+    fileWatcher.onDidCreate((uri) => {
         updateWorkspaceContext();
+        symbolIndexer.indexFile(uri.fsPath);
         treeDataProvider.refresh();
     });
-    fileWatcher.onDidChange(() => treeDataProvider.refresh());
+    fileWatcher.onDidChange((uri) => {
+        symbolIndexer.indexFile(uri.fsPath);
+        treeDataProvider.refresh();
+    });
     fileWatcher.onDidDelete(() => {
         updateWorkspaceContext();
+        symbolIndexer.indexWorkspace();
         treeDataProvider.refresh();
     });
 

@@ -2,7 +2,9 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 import { RosettaParser } from '../parser/RosettaParser';
-import { RosettaFile, RosettaType, RosettaEnum } from '../models/RosettaAst';
+import { RosettaFile, RosettaType, RosettaEnum, RosettaField, RosettaEnumValue } from '../models/RosettaAst';
+
+type TreeItemData = RosettaType | RosettaEnum | RosettaField | RosettaEnumValue | { namespace: string; files: RosettaFile[] } | { name: string; type: string };
 
 /**
  * Tree item types
@@ -24,7 +26,7 @@ export class CdmTreeItem extends vscode.TreeItem {
         public readonly label: string,
         public readonly type: TreeItemType,
         public readonly collapsibleState: vscode.TreeItemCollapsibleState,
-        public readonly data?: any,
+        public readonly data?: TreeItemData,
         public readonly filePath?: string
     ) {
         super(label, collapsibleState);
@@ -63,7 +65,7 @@ export class CdmTreeItem extends vscode.TreeItem {
     }
 
     private getTooltip(): string {
-        if (this.data?.description) {
+        if (this.data && 'description' in this.data && this.data.description) {
             return this.data.description;
         }
 
@@ -157,7 +159,8 @@ export class CdmTreeDataProvider implements vscode.TreeDataProvider<CdmTreeItem>
      */
     private getNamespaceChildren(element: CdmTreeItem): CdmTreeItem[] {
         const items: CdmTreeItem[] = [];
-        const files = element.data.files as RosettaFile[];
+        const data = element.data as { namespace: string; files: RosettaFile[] };
+        const files = data.files;
 
         // Collect all types and enums from files in this namespace
         for (const file of files) {
@@ -244,7 +247,7 @@ export class CdmTreeDataProvider implements vscode.TreeDataProvider<CdmTreeItem>
     /**
      * Format cardinality for display
      */
-    private formatCardinality(cardinality: any): string {
+    private formatCardinality(cardinality: { min: number; max: number | '*' }): string {
         const { min, max } = cardinality;
         return `${min}..${max}`;
     }

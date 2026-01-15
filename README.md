@@ -9,6 +9,9 @@ Visual viewer for FINOS Common Domain Model (CDM) written in Rosetta DSL.
 - **Type Navigation**: Click on types and enums to jump to their definitions
 - **Field Details**: View field cardinality, types, and descriptions
 - **Auto-refresh**: Automatically updates when .rosetta files change
+- **Syntax Highlighting**: Full syntax highlighting for Rosetta DSL files
+- **Enhanced Hover**: Hover over types, enums, and fields to see detailed information
+- **Go to Definition**: Navigate to type and enum definitions with F12 or Cmd+Click
 
 ## Installation
 
@@ -92,8 +95,14 @@ finos-cdm-viewer/
 │   │   └── RosettaAst.ts      # AST type definitions
 │   ├── parser/
 │   │   └── RosettaParser.ts   # Rosetta DSL parser
+│   ├── indexer/
+│   │   └── SymbolIndexer.ts   # Symbol indexing for workspace
 │   └── providers/
-│       └── CdmTreeDataProvider.ts  # Tree view provider
+│       ├── CdmTreeDataProvider.ts        # Tree view provider
+│       ├── RosettaHoverProvider.ts       # Hover information provider
+│       └── RosettaDefinitionProvider.ts  # Go to definition provider
+├── syntaxes/
+│   └── rosetta.tmLanguage.json  # Syntax highlighting grammar
 ├── test/
 │   └── fixtures/              # Test Rosetta files
 ├── package.json
@@ -157,16 +166,16 @@ The extension uses a lightweight regex-based parser that extracts:
 
 ## Roadmap
 
-### MVP (Current)
+### MVP
 - [x] Tree view with namespace/type/enum hierarchy
 - [x] Basic navigation to definitions
 - [x] Auto-refresh on file changes
 
-### Phase 2
-- [ ] Enhanced hover information with type details
-- [ ] Go to Definition for type references
+### Phase 2 (Current)
+- [x] Enhanced hover information with type details
+- [x] Go to Definition for type references
+- [x] Syntax highlighting for Rosetta DSL
 - [ ] Find All References
-- [ ] Syntax highlighting for Rosetta DSL
 
 ### Phase 3
 - [ ] Type graph visualization

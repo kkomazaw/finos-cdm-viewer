@@ -7,7 +7,6 @@
       "ES2020"
     ],
     "sourceMap": true,
-    "rootDir": "src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -24,6 +23,7 @@
   ],
   "exclude": [
     "node_modules",
-    ".vscode-test"
+    ".vscode-test",
+    "test/**/*"
   ]
 }

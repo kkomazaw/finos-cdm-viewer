@@ -41,7 +41,7 @@ export class RosettaParser {
                 imports: this.extractImports(content),
                 types: this.extractTypes(content, errors),
                 enums: this.extractEnums(content, errors),
-                functions: this.extractFunctions(content, errors)
+                functions: this.extractFunctions()
             };
 
             return { file, errors };
@@ -120,7 +120,7 @@ export class RosettaParser {
 
             try {
                 const metadata = this.extractMetadata(body);
-                const fields = this.extractFields(body, errors);
+                const fields = this.extractFields(body);
                 const conditions = this.extractConditions(body);
 
                 types.push({
@@ -151,7 +151,7 @@ export class RosettaParser {
     /**
      * Extract field definitions
      */
-    private extractFields(body: string, _errors: ParseError[]): RosettaField[] {
+    private extractFields(body: string): RosettaField[] {
         const fields: RosettaField[] = [];
 
         // Match field definitions
@@ -339,7 +339,7 @@ export class RosettaParser {
     /**
      * Extract function definitions (stub implementation)
      */
-    private extractFunctions(_content: string, _errors: ParseError[]): RosettaFunction[] {
+    private extractFunctions(): RosettaFunction[] {
         const functions: RosettaFunction[] = [];
         // Function parsing is more complex, leaving as stub for now
         return functions;

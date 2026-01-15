@@ -1,0 +1,275 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Rosetta",
+  "scopeName": "source.rosetta",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#namespace-declaration"
+    },
+    {
+      "include": "#version-declaration"
+    },
+    {
+      "include": "#import-statement"
+    },
+    {
+      "include": "#type-declaration"
+    },
+    {
+      "include": "#enum-declaration"
+    },
+    {
+      "include": "#condition-declaration"
+    },
+    {
+      "include": "#metadata-annotation"
+    },
+    {
+      "include": "#field-declaration"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#operators"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.rosetta",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.rosetta",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "namespace-declaration": {
+      "name": "meta.namespace.rosetta",
+      "match": "^(namespace)\\s+([\\.\\w]+)\\s*(:)\\s*(<\"[^\"]*\">)?",
+      "captures": {
+        "1": {
+          "name": "keyword.control.namespace.rosetta"
+        },
+        "2": {
+          "name": "entity.name.namespace.rosetta"
+        },
+        "3": {
+          "name": "punctuation.separator.colon.rosetta"
+        },
+        "4": {
+          "name": "string.quoted.description.rosetta"
+        }
+      }
+    },
+    "version-declaration": {
+      "name": "meta.version.rosetta",
+      "match": "^(version)\\s+(\"[^\"]+\")",
+      "captures": {
+        "1": {
+          "name": "keyword.control.version.rosetta"
+        },
+        "2": {
+          "name": "string.quoted.double.rosetta"
+        }
+      }
+    },
+    "import-statement": {
+      "name": "meta.import.rosetta",
+      "match": "^(import)\\s+([\\.\\w\\*]+)",
+      "captures": {
+        "1": {
+          "name": "keyword.control.import.rosetta"
+        },
+        "2": {
+          "name": "entity.name.type.import.rosetta"
+        }
+      }
+    },
+    "type-declaration": {
+      "name": "meta.type.declaration.rosetta",
+      "match": "^(type)\\s+(\\w+)(?:\\s+(extends)\\s+(\\w+))?\\s*(:)\\s*(<\"[^\"]*\">)?",
+      "captures": {
+        "1": {
+          "name": "keyword.declaration.type.rosetta"
+        },
+        "2": {
+          "name": "entity.name.type.rosetta"
+        },
+        "3": {
+          "name": "keyword.control.extends.rosetta"
+        },
+        "4": {
+          "name": "entity.other.inherited-class.rosetta"
+        },
+        "5": {
+          "name": "punctuation.separator.colon.rosetta"
+        },
+        "6": {
+          "name": "string.quoted.description.rosetta"
+        }
+      }
+    },
+    "enum-declaration": {
+      "name": "meta.enum.declaration.rosetta",
+      "match": "^(enum)\\s+(\\w+)\\s*(:)\\s*(<\"[^\"]*\">)?",
+      "captures": {
+        "1": {
+          "name": "keyword.declaration.enum.rosetta"
+        },
+        "2": {
+          "name": "entity.name.type.enum.rosetta"
+        },
+        "3": {
+          "name": "punctuation.separator.colon.rosetta"
+        },
+        "4": {
+          "name": "string.quoted.description.rosetta"
+        }
+      }
+    },
+    "condition-declaration": {
+      "name": "meta.condition.declaration.rosetta",
+      "match": "^\\s*(condition)\\s+(\\w+)\\s*(:)\\s*(<\"[^\"]*\">)?",
+      "captures": {
+        "1": {
+          "name": "keyword.control.condition.rosetta"
+        },
+        "2": {
+          "name": "entity.name.function.condition.rosetta"
+        },
+        "3": {
+          "name": "punctuation.separator.colon.rosetta"
+        },
+        "4": {
+          "name": "string.quoted.description.rosetta"
+        }
+      }
+    },
+    "metadata-annotation": {
+      "name": "meta.annotation.metadata.rosetta",
+      "match": "\\[(metadata)\\s+(key|id|reference|scheme)\\]",
+      "captures": {
+        "1": {
+          "name": "keyword.other.metadata.rosetta"
+        },
+        "2": {
+          "name": "entity.other.attribute-name.metadata.rosetta"
+        }
+      }
+    },
+    "field-declaration": {
+      "name": "meta.field.declaration.rosetta",
+      "match": "^\\s*(\\w+)\\s+([\\w<>]+)\\s+(\\([^)]+\\))(?:\\s*(<\"[^\"]*\">))?",
+      "captures": {
+        "1": {
+          "name": "variable.other.field.rosetta"
+        },
+        "2": {
+          "name": "entity.name.type.rosetta"
+        },
+        "3": {
+          "name": "meta.cardinality.rosetta"
+        },
+        "4": {
+          "name": "string.quoted.description.rosetta"
+        }
+      }
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.description.rosetta",
+          "begin": "<\"",
+          "end": "\">",
+          "patterns": [
+            {
+              "name": "constant.character.escape.rosetta",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.double.rosetta",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.rosetta",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.cardinality.rosetta",
+          "match": "\\b(\\d+)\\.\\.(\\d+|\\*)\\b"
+        },
+        {
+          "name": "constant.numeric.integer.rosetta",
+          "match": "\\b\\d+\\b"
+        },
+        {
+          "name": "constant.numeric.float.rosetta",
+          "match": "\\b\\d+\\.\\d+\\b"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.rosetta",
+          "match": "\\b(namespace|version|import|type|enum|extends|condition|func|function)\\b"
+        },
+        {
+          "name": "keyword.other.rosetta",
+          "match": "\\b(displayName|metadata)\\b"
+        },
+        {
+          "name": "keyword.operator.logical.rosetta",
+          "match": "\\b(exists|and|or|not|if|then|else)\\b"
+        },
+        {
+          "name": "storage.type.primitive.rosetta",
+          "match": "\\b(string|int|number|boolean|date|time|dateTime|zonedDateTime)\\b"
+        },
+        {
+          "name": "constant.language.rosetta",
+          "match": "\\b(true|false|null)\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.rosetta",
+          "match": "(\\+|-|\\*|/|%|=|!=|<|>|<=|>=|\\.\\.)"
+        },
+        {
+          "name": "punctuation.separator.rosetta",
+          "match": "(:|,|;|\\.|->)"
+        },
+        {
+          "name": "punctuation.bracket.rosetta",
+          "match": "(\\[|\\]|\\{|\\}|\\(|\\)|<|>)"
+        }
+      ]
+    }
+  }
+}
