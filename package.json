@@ -2,7 +2,7 @@
   "name": "finos-cdm-viewer",
   "displayName": "FINOS CDM Viewer",
   "description": "Visual viewer for FINOS Common Domain Model (CDM) written in Rosetta DSL",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "publisher": "finos-community",
   "engines": {
     "vscode": "^1.85.0"
@@ -60,7 +60,8 @@
       },
       {
         "command": "cdm.showTypeGraph",
-        "title": "CDM: Show Type Graph"
+        "title": "CDM: Show Type Graph",
+        "icon": "$(graph)"
       }
     ],
     "menus": {
@@ -69,6 +70,19 @@
           "command": "cdm.refreshExplorer",
           "when": "view == cdmExplorer",
           "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "cdm.showTypeGraph",
+          "when": "resourceLangId == rosetta",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "cdm.showTypeGraph",
+          "when": "workspaceHasRosettaFiles"
         }
       ]
     },

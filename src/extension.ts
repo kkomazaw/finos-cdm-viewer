@@ -4,6 +4,8 @@ import { RosettaHoverProvider } from './providers/RosettaHoverProvider';
 import { RosettaDefinitionProvider } from './providers/RosettaDefinitionProvider';
 import { RosettaReferenceProvider } from './providers/RosettaReferenceProvider';
 import { SymbolIndexer } from './indexer/SymbolIndexer';
+import { TypeGraphBuilder } from './graph/TypeGraphBuilder';
+import { TypeGraphPanel } from './views/TypeGraphPanel';
 import { RosettaType, RosettaEnum } from './models/RosettaAst';
 
 /**
@@ -28,6 +30,9 @@ export function activate(context: vscode.ExtensionContext) {
     // Create symbol indexer
     const symbolIndexer = new SymbolIndexer();
     symbolIndexer.indexWorkspace();
+
+    // Create type graph builder
+    const typeGraphBuilder = new TypeGraphBuilder(symbolIndexer);
 
     // Create tree data provider
     const treeDataProvider = new CdmTreeDataProvider();
@@ -92,10 +97,45 @@ export function activate(context: vscode.ExtensionContext) {
         })
     );
 
-    // Register show type graph command (placeholder for future implementation)
+    // Register show type graph command
     context.subscriptions.push(
-        vscode.commands.registerCommand('cdm.showTypeGraph', () => {
-            vscode.window.showInformationMessage('Type graph visualization coming soon!');
+        vscode.commands.registerCommand('cdm.showTypeGraph', async () => {
+            // Get the current word under cursor if in a Rosetta file
+            const editor = vscode.window.activeTextEditor;
+            let typeName: string | undefined;
+
+            if (editor && editor.document.languageId === 'rosetta') {
+                const position = editor.selection.active;
+                const wordRange = editor.document.getWordRangeAtPosition(position);
+                if (wordRange) {
+                    const word = editor.document.getText(wordRange);
+                    const symbol = symbolIndexer.getSymbol(word);
+                    if (symbol) {
+                        typeName = word;
+                    }
+                }
+            }
+
+            // If no type name, ask the user
+            if (!typeName) {
+                const answer = await vscode.window.showQuickPick(
+                    ['Show all types', 'Enter type name'],
+                    { placeHolder: 'What would you like to visualize?' }
+                );
+
+                if (answer === 'Enter type name') {
+                    typeName = await vscode.window.showInputBox({
+                        prompt: 'Enter the type or enum name',
+                        placeHolder: 'e.g., Person, Employee'
+                    });
+
+                    if (!typeName) {
+                        return;
+                    }
+                }
+            }
+
+            TypeGraphPanel.createOrShow(typeGraphBuilder, typeName);
         })
     );
 
