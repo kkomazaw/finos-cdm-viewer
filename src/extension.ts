@@ -4,6 +4,7 @@ import { RosettaHoverProvider } from './providers/RosettaHoverProvider';
 import { RosettaDefinitionProvider } from './providers/RosettaDefinitionProvider';
 import { RosettaReferenceProvider } from './providers/RosettaReferenceProvider';
 import { RosettaCompletionProvider } from './providers/RosettaCompletionProvider';
+import { RosettaRenameProvider } from './providers/RosettaRenameProvider';
 import { SymbolIndexer } from './indexer/SymbolIndexer';
 import { TypeGraphBuilder } from './graph/TypeGraphBuilder';
 import { TypeGraphPanel } from './views/TypeGraphPanel';
@@ -252,6 +253,11 @@ export function activate(context: vscode.ExtensionContext) {
             new RosettaCompletionProvider(symbolIndexer),
             ' ', '\n', '\t' // Trigger characters
         )
+    );
+
+    // Register rename provider for Rosetta files
+    context.subscriptions.push(
+        vscode.languages.registerRenameProvider('rosetta', new RosettaRenameProvider(symbolIndexer))
     );
 
     // Watch for changes to .rosetta files and refresh

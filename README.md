@@ -18,6 +18,7 @@ Visual viewer for FINOS Common Domain Model (CDM) written in Rosetta DSL.
 - **Export to Multiple Formats**: Export CDM data to JSON, Mermaid diagrams, or GraphViz DOT files
 - **Validation and Diagnostics**: Real-time validation with error highlighting for undefined types, circular inheritance, invalid cardinality, and more
 - **Code Completion**: IntelliSense-style code completion for types, enums, keywords, metadata, and cardinality
+- **Rename Symbol**: Rename types and enums across the entire workspace with F2 or context menu
 
 ## Installation
 
@@ -115,6 +116,21 @@ The extension provides IntelliSense-style code completion while editing Rosetta 
 - **Cardinality Completions**: Suggests common cardinality patterns (0..1, 1..1, 0..*, 1..*)
 
 Completions are triggered automatically as you type, or can be manually triggered with Ctrl+Space (or Cmd+Space on macOS).
+
+### Rename Symbol
+
+The extension supports renaming types and enums across the entire workspace:
+
+- **Smart Renaming**: Renames all occurrences of a type or enum, including its definition and all references
+- **Validation**: Ensures the new name follows PascalCase convention and doesn't conflict with existing symbols or primitive types
+- **Workspace-Wide**: Updates references across all Rosetta files in the workspace
+- **Safe Refactoring**: Validates before applying changes to prevent breaking the codebase
+
+To rename a symbol:
+1. Place cursor on a type or enum name
+2. Press F2 or right-click and select "Rename Symbol"
+3. Enter the new name
+4. Press Enter to apply changes across all files
 
 ### File Watcher
 
@@ -247,13 +263,13 @@ The extension uses a lightweight regex-based parser that extracts:
 - [x] Syntax highlighting for Rosetta DSL
 - [x] Find All References
 
-### Phase 3 (Current)
+### Phase 3 (Complete)
 - [x] Type graph visualization
 - [x] Search and filter functionality
 - [x] Export to various formats (JSON, Mermaid, GraphViz)
 - [x] Validation and error highlighting
 - [x] Code completion for type references
-- [ ] Rename symbol support
+- [x] Rename symbol support
 
 ## Contributing
 
