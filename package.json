@@ -2,7 +2,7 @@
   "name": "finos-cdm-viewer",
   "displayName": "FINOS CDM Viewer",
   "description": "Visual viewer for FINOS Common Domain Model (CDM) written in Rosetta DSL",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "publisher": "finos-community",
   "engines": {
     "vscode": "^1.85.0"

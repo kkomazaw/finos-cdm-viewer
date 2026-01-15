@@ -9,6 +9,7 @@ import { TypeGraphPanel } from './views/TypeGraphPanel';
 import { SearchProvider } from './search/SearchProvider';
 import { SearchPanel } from './search/SearchPanel';
 import { ExportProvider, ExportFormat } from './export/ExportProvider';
+import { DiagnosticProvider } from './validation/DiagnosticProvider';
 import { RosettaType, RosettaEnum } from './models/RosettaAst';
 
 /**
@@ -43,6 +44,9 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Create export provider
     const exportProvider = new ExportProvider(symbolIndexer, typeGraphBuilder);
+
+    // Create diagnostic provider
+    const diagnosticProvider = new DiagnosticProvider(symbolIndexer);
 
     // Create tree data provider
     const treeDataProvider = new CdmTreeDataProvider();
@@ -251,6 +255,10 @@ export function activate(context: vscode.ExtensionContext) {
     fileWatcher.onDidChange((uri) => {
         symbolIndexer.indexFile(uri.fsPath);
         treeDataProvider.refresh();
+        // Validate the changed document
+        vscode.workspace.openTextDocument(uri).then(doc => {
+            diagnosticProvider.validateDocument(doc);
+        });
     });
     fileWatcher.onDidDelete(() => {
         updateWorkspaceContext();
@@ -259,6 +267,53 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     context.subscriptions.push(fileWatcher);
+
+    // Validate open documents
+    vscode.workspace.textDocuments.forEach(doc => {
+        if (doc.languageId === 'rosetta') {
+            diagnosticProvider.validateDocument(doc);
+        }
+    });
+
+    // Validate on document open
+    context.subscriptions.push(
+        vscode.workspace.onDidOpenTextDocument(doc => {
+            if (doc.languageId === 'rosetta') {
+                diagnosticProvider.validateDocument(doc);
+            }
+        })
+    );
+
+    // Validate on document save
+    context.subscriptions.push(
+        vscode.workspace.onDidSaveTextDocument(doc => {
+            if (doc.languageId === 'rosetta') {
+                // Re-index the file
+                symbolIndexer.indexFile(doc.uri.fsPath);
+                // Validate
+                diagnosticProvider.validateDocument(doc);
+                // Refresh tree
+                treeDataProvider.refresh();
+            }
+        })
+    );
+
+    // Validate on document change (with debounce)
+    let validationTimeout: NodeJS.Timeout | undefined;
+    context.subscriptions.push(
+        vscode.workspace.onDidChangeTextDocument(event => {
+            if (event.document.languageId === 'rosetta') {
+                if (validationTimeout) {
+                    clearTimeout(validationTimeout);
+                }
+                validationTimeout = setTimeout(() => {
+                    diagnosticProvider.validateDocument(event.document);
+                }, 500); // 500ms debounce
+            }
+        })
+    );
+
+    context.subscriptions.push(diagnosticProvider);
 
     // Initial tree refresh
     treeDataProvider.refresh();

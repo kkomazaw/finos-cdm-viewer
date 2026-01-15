@@ -16,6 +16,7 @@ Visual viewer for FINOS Common Domain Model (CDM) written in Rosetta DSL.
 - **Type Graph Visualization**: Interactive graph visualization of type relationships using Mermaid.js
 - **Search and Filter**: Quick search for types, enums, and fields with fuzzy matching and advanced filters
 - **Export to Multiple Formats**: Export CDM data to JSON, Mermaid diagrams, or GraphViz DOT files
+- **Validation and Diagnostics**: Real-time validation with error highlighting for undefined types, circular inheritance, invalid cardinality, and more
 
 ## Installation
 
@@ -83,6 +84,25 @@ Visual viewer for FINOS Common Domain Model (CDM) written in Rosetta DSL.
   - Mermaid format: Ready-to-use diagram markup for documentation
   - GraphViz DOT format: Professional graph visualization
 
+### Validation and Diagnostics
+
+The extension provides real-time validation of Rosetta files with error highlighting:
+
+- **Undefined Type References**: Detects references to types or enums that don't exist
+- **Circular Inheritance**: Identifies circular inheritance chains in type hierarchies
+- **Invalid Cardinality**: Validates field cardinality (min must not exceed max)
+- **Duplicate Fields**: Detects duplicate field names within types
+- **Duplicate Enum Values**: Detects duplicate values in enums
+- **Empty Types**: Warns about types with no fields defined
+- **Empty Enums**: Flags enums with no values
+- **Missing Descriptions**: Optional warning for missing documentation
+
+Validation runs automatically on:
+- Document open
+- Document save
+- Document changes (with 500ms debounce)
+- File system changes
+
 ### File Watcher
 
 The extension automatically watches for changes to `.rosetta` files and refreshes the tree view when files are:
@@ -125,6 +145,9 @@ finos-cdm-viewer/
 │   │   └── SearchPanel.ts       # Search quick pick interface
 │   ├── export/
 │   │   └── ExportProvider.ts    # Export to JSON/Mermaid/GraphViz
+│   ├── validation/
+│   │   ├── ValidationRules.ts   # Validation rule definitions
+│   │   └── DiagnosticProvider.ts  # Real-time diagnostics provider
 │   ├── views/
 │   │   └── TypeGraphPanel.ts    # WebView panel for graph visualization
 │   ├── providers/
@@ -215,7 +238,7 @@ The extension uses a lightweight regex-based parser that extracts:
 - [x] Type graph visualization
 - [x] Search and filter functionality
 - [x] Export to various formats (JSON, Mermaid, GraphViz)
-- [ ] Validation and error highlighting
+- [x] Validation and error highlighting
 - [ ] Code completion for type references
 - [ ] Rename symbol support
 
