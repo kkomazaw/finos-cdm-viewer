@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { CdmTreeDataProvider, CdmTreeItem, TreeItemType } from './providers/CdmTreeDataProvider';
 import { RosettaHoverProvider } from './providers/RosettaHoverProvider';
 import { RosettaDefinitionProvider } from './providers/RosettaDefinitionProvider';
+import { RosettaReferenceProvider } from './providers/RosettaReferenceProvider';
 import { SymbolIndexer } from './indexer/SymbolIndexer';
 import { RosettaType, RosettaEnum } from './models/RosettaAst';
 
@@ -106,6 +107,11 @@ export function activate(context: vscode.ExtensionContext) {
     // Register definition provider for Rosetta files
     context.subscriptions.push(
         vscode.languages.registerDefinitionProvider('rosetta', new RosettaDefinitionProvider(symbolIndexer))
+    );
+
+    // Register reference provider for Rosetta files
+    context.subscriptions.push(
+        vscode.languages.registerReferenceProvider('rosetta', new RosettaReferenceProvider(symbolIndexer))
     );
 
     // Watch for changes to .rosetta files and refresh

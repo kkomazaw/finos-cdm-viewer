@@ -12,6 +12,7 @@ Visual viewer for FINOS Common Domain Model (CDM) written in Rosetta DSL.
 - **Syntax Highlighting**: Full syntax highlighting for Rosetta DSL files
 - **Enhanced Hover**: Hover over types, enums, and fields to see detailed information
 - **Go to Definition**: Navigate to type and enum definitions with F12 or Cmd+Click
+- **Find All References**: Find all usages of types and enums across the workspace with Shift+F12
 
 ## Installation
 
@@ -56,6 +57,9 @@ Visual viewer for FINOS Common Domain Model (CDM) written in Rosetta DSL.
 - **Expand** namespaces to see all types and enums defined within
 - **Expand** types to see their fields, inheritance, and conditions
 - **Expand** enums to see their values
+- **Hover** over type or enum names to see detailed information
+- **F12** or **Cmd+Click** on a type or enum to go to its definition
+- **Shift+F12** on a type or enum to find all references
 
 ### Commands
 
@@ -100,7 +104,8 @@ finos-cdm-viewer/
 │   └── providers/
 │       ├── CdmTreeDataProvider.ts        # Tree view provider
 │       ├── RosettaHoverProvider.ts       # Hover information provider
-│       └── RosettaDefinitionProvider.ts  # Go to definition provider
+│       ├── RosettaDefinitionProvider.ts  # Go to definition provider
+│       └── RosettaReferenceProvider.ts   # Find all references provider
 ├── syntaxes/
 │   └── rosetta.tmLanguage.json  # Syntax highlighting grammar
 ├── test/
@@ -171,17 +176,19 @@ The extension uses a lightweight regex-based parser that extracts:
 - [x] Basic navigation to definitions
 - [x] Auto-refresh on file changes
 
-### Phase 2 (Current)
+### Phase 2
 - [x] Enhanced hover information with type details
 - [x] Go to Definition for type references
 - [x] Syntax highlighting for Rosetta DSL
-- [ ] Find All References
+- [x] Find All References
 
-### Phase 3
+### Phase 3 (Current)
 - [ ] Type graph visualization
 - [ ] Search and filter functionality
 - [ ] Export to various formats (JSON, GraphViz)
 - [ ] Validation and error highlighting
+- [ ] Code completion for type references
+- [ ] Rename symbol support
 
 ## Contributing
 

@@ -213,4 +213,89 @@ export class SymbolIndexer {
 
         return undefined;
     }
+
+    /**
+     * Find all references to a type or enum
+     */
+    findReferences(symbolName: string): vscode.Location[] {
+        const locations: vscode.Location[] = [];
+        const symbol = this.getSymbol(symbolName);
+
+        if (!symbol) {
+            return locations;
+        }
+
+        const simpleName = symbolName.split('.').pop() || symbolName;
+
+        // Search through all files
+        for (const [filePath, file] of this.files.entries()) {
+            // Check type extends
+            for (const type of file.types) {
+                if (type.extends === simpleName) {
+                    const location = this.findLocationInFile(filePath, `extends ${simpleName}`);
+                    if (location) {
+                        locations.push(location);
+                    }
+                }
+
+                // Check field types
+                for (const field of type.fields) {
+                    if (field.type === simpleName) {
+                        const location = this.findLocationInFile(filePath, `${field.name} ${simpleName}`);
+                        if (location) {
+                            locations.push(location);
+                        }
+                    }
+                }
+            }
+
+            // Check function parameters and return types
+            for (const func of file.functions) {
+                for (const input of func.inputs) {
+                    if (input.type === simpleName) {
+                        const location = this.findLocationInFile(filePath, `${input.name} ${simpleName}`);
+                        if (location) {
+                            locations.push(location);
+                        }
+                    }
+                }
+
+                if (func.output && func.output.type === simpleName) {
+                    const location = this.findLocationInFile(filePath, simpleName);
+                    if (location) {
+                        locations.push(location);
+                    }
+                }
+            }
+        }
+
+        return locations;
+    }
+
+    /**
+     * Find a specific pattern in a file and return its location
+     */
+    private findLocationInFile(filePath: string, pattern: string): vscode.Location | null {
+        try {
+            const content = fs.readFileSync(filePath, 'utf-8');
+            const index = content.indexOf(pattern);
+
+            if (index === -1) {
+                return null;
+            }
+
+            const lines = content.substring(0, index).split('\n');
+            const line = lines.length - 1;
+            const column = lines[lines.length - 1].length;
+
+            const uri = vscode.Uri.file(filePath);
+            const position = new vscode.Position(line, column);
+            const endPosition = new vscode.Position(line, column + pattern.length);
+
+            return new vscode.Location(uri, new vscode.Range(position, endPosition));
+        } catch (error) {
+            console.error(`Error finding pattern in file ${filePath}:`, error);
+            return null;
+        }
+    }
 }
