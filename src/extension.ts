@@ -6,6 +6,8 @@ import { RosettaReferenceProvider } from './providers/RosettaReferenceProvider';
 import { SymbolIndexer } from './indexer/SymbolIndexer';
 import { TypeGraphBuilder } from './graph/TypeGraphBuilder';
 import { TypeGraphPanel } from './views/TypeGraphPanel';
+import { SearchProvider } from './search/SearchProvider';
+import { SearchPanel } from './search/SearchPanel';
 import { RosettaType, RosettaEnum } from './models/RosettaAst';
 
 /**
@@ -33,6 +35,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Create type graph builder
     const typeGraphBuilder = new TypeGraphBuilder(symbolIndexer);
+
+    // Create search provider
+    const searchProvider = new SearchProvider(symbolIndexer);
+    const searchPanel = new SearchPanel(searchProvider);
 
     // Create tree data provider
     const treeDataProvider = new CdmTreeDataProvider();
@@ -136,6 +142,13 @@ export function activate(context: vscode.ExtensionContext) {
             }
 
             TypeGraphPanel.createOrShow(typeGraphBuilder, typeName);
+        })
+    );
+
+    // Register search command
+    context.subscriptions.push(
+        vscode.commands.registerCommand('cdm.search', async () => {
+            await searchPanel.showSearch();
         })
     );
 

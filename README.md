@@ -14,6 +14,7 @@ Visual viewer for FINOS Common Domain Model (CDM) written in Rosetta DSL.
 - **Go to Definition**: Navigate to type and enum definitions with F12 or Cmd+Click
 - **Find All References**: Find all usages of types and enums across the workspace with Shift+F12
 - **Type Graph Visualization**: Interactive graph visualization of type relationships using Mermaid.js
+- **Search and Filter**: Quick search for types, enums, and fields with fuzzy matching and advanced filters
 
 ## Installation
 
@@ -69,6 +70,12 @@ Visual viewer for FINOS Common Domain Model (CDM) written in Rosetta DSL.
   - Can be invoked from command palette, editor context menu, or with cursor on a type name
   - Shows inheritance relationships, field dependencies, and enum usage
   - Supports zoom, pan, and SVG export
+- `CDM: Search Types and Enums` - Search for CDM elements with advanced filtering
+  - Fuzzy search supports partial matches and character-by-character matching
+  - Filter by element kind (types, enums, fields)
+  - Filter by namespace
+  - Filter by description presence
+  - Navigate directly to search results
 
 ### File Watcher
 
@@ -107,6 +114,9 @@ finos-cdm-viewer/
 │   │   └── SymbolIndexer.ts   # Symbol indexing for workspace
 │   ├── graph/
 │   │   └── TypeGraphBuilder.ts  # Type graph builder
+│   ├── search/
+│   │   ├── SearchProvider.ts    # Search and filter provider
+│   │   └── SearchPanel.ts       # Search quick pick interface
 │   ├── views/
 │   │   └── TypeGraphPanel.ts    # WebView panel for graph visualization
 │   ├── providers/
@@ -195,7 +205,7 @@ The extension uses a lightweight regex-based parser that extracts:
 
 ### Phase 3 (Current)
 - [x] Type graph visualization
-- [ ] Search and filter functionality
+- [x] Search and filter functionality
 - [ ] Export to various formats (JSON, GraphViz)
 - [ ] Validation and error highlighting
 - [ ] Code completion for type references
