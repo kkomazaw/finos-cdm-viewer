@@ -17,6 +17,7 @@ Visual viewer for FINOS Common Domain Model (CDM) written in Rosetta DSL.
 - **Search and Filter**: Quick search for types, enums, and fields with fuzzy matching and advanced filters
 - **Export to Multiple Formats**: Export CDM data to JSON, Mermaid diagrams, or GraphViz DOT files
 - **Validation and Diagnostics**: Real-time validation with error highlighting for undefined types, circular inheritance, invalid cardinality, and more
+- **Code Completion**: IntelliSense-style code completion for types, enums, keywords, metadata, and cardinality
 
 ## Installation
 
@@ -102,6 +103,18 @@ Validation runs automatically on:
 - Document save
 - Document changes (with 500ms debounce)
 - File system changes
+
+### Code Completion
+
+The extension provides IntelliSense-style code completion while editing Rosetta files:
+
+- **Type Completions**: Suggests primitive types (string, int, number, boolean, date, etc.) and custom types when defining fields or extends clauses
+- **Enum Completions**: Suggests enums when defining field types
+- **Keyword Completions**: Provides snippet-based completions for Rosetta keywords (namespace, type, enum, func, extends, condition)
+- **Metadata Completions**: Suggests metadata annotations (key, id, reference, scheme, calculation)
+- **Cardinality Completions**: Suggests common cardinality patterns (0..1, 1..1, 0..*, 1..*)
+
+Completions are triggered automatically as you type, or can be manually triggered with Ctrl+Space (or Cmd+Space on macOS).
 
 ### File Watcher
 
@@ -239,7 +252,7 @@ The extension uses a lightweight regex-based parser that extracts:
 - [x] Search and filter functionality
 - [x] Export to various formats (JSON, Mermaid, GraphViz)
 - [x] Validation and error highlighting
-- [ ] Code completion for type references
+- [x] Code completion for type references
 - [ ] Rename symbol support
 
 ## Contributing

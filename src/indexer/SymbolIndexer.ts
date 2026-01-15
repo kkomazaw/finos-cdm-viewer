@@ -298,4 +298,26 @@ export class SymbolIndexer {
             return null;
         }
     }
+
+    /**
+     * Get all types from all files
+     */
+    getAllTypes(): RosettaType[] {
+        const types: RosettaType[] = [];
+        for (const file of this.files.values()) {
+            types.push(...file.types);
+        }
+        return types;
+    }
+
+    /**
+     * Get all enums from all files
+     */
+    getAllEnums(): RosettaEnum[] {
+        const enums: RosettaEnum[] = [];
+        for (const file of this.files.values()) {
+            enums.push(...file.enums);
+        }
+        return enums;
+    }
 }

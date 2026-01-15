@@ -3,6 +3,7 @@ import { CdmTreeDataProvider, CdmTreeItem, TreeItemType } from './providers/CdmT
 import { RosettaHoverProvider } from './providers/RosettaHoverProvider';
 import { RosettaDefinitionProvider } from './providers/RosettaDefinitionProvider';
 import { RosettaReferenceProvider } from './providers/RosettaReferenceProvider';
+import { RosettaCompletionProvider } from './providers/RosettaCompletionProvider';
 import { SymbolIndexer } from './indexer/SymbolIndexer';
 import { TypeGraphBuilder } from './graph/TypeGraphBuilder';
 import { TypeGraphPanel } from './views/TypeGraphPanel';
@@ -242,6 +243,15 @@ export function activate(context: vscode.ExtensionContext) {
     // Register reference provider for Rosetta files
     context.subscriptions.push(
         vscode.languages.registerReferenceProvider('rosetta', new RosettaReferenceProvider(symbolIndexer))
+    );
+
+    // Register completion provider for Rosetta files
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider(
+            'rosetta',
+            new RosettaCompletionProvider(symbolIndexer),
+            ' ', '\n', '\t' // Trigger characters
+        )
     );
 
     // Watch for changes to .rosetta files and refresh
