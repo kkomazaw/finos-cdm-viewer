@@ -21,7 +21,7 @@ Visual viewer for FINOS Common Domain Model (CDM) written in Rosetta DSL.
 
 1. Clone this repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/kkomazaw/finos-cdm-viewer.git
    cd finos-cdm-viewer
    ```
 
