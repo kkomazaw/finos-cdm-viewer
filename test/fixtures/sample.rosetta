@@ -1,0 +1,50 @@
+namespace cdm.sample.test : <"Sample namespace for testing the CDM viewer">
+version "1.0.0"
+
+import cdm.base.*
+
+type Person : <"Represents a person with basic information">
+    [metadata key]
+
+    firstName string (1..1) <"The person's first name">
+    lastName string (1..1) <"The person's last name">
+    age int (0..1) <"The person's age in years">
+    emails string (0..*) <"List of email addresses">
+    address Address (0..1) <"Primary address">
+
+    condition NameRequired: <"First and last names are required">
+        firstName exists and lastName exists
+
+type Address : <"Represents a physical address">
+    street string (1..1) <"Street address">
+    city string (1..1) <"City name">
+    state string (0..1) <"State or province">
+    postalCode string (1..1) <"Postal or ZIP code">
+    country Country (1..1) <"Country">
+
+type Employee extends Person : <"Represents an employee extending Person">
+    employeeId string (1..1) <"Unique employee identifier">
+        [metadata id]
+
+    department Department (1..1) <"Department where employee works">
+    salary number (0..1) <"Annual salary">
+    manager Employee (0..1) <"Direct manager reference">
+        [metadata reference]
+
+    condition EmployeeIdRequired: <"Employee ID must be present">
+        employeeId exists
+
+enum Country : <"ISO country codes">
+    US displayName "United States" <"United States of America">
+    CA displayName "Canada" <"Canada">
+    GB displayName "United Kingdom" <"United Kingdom">
+    JP displayName "Japan" <"Japan">
+    DE displayName "Germany" <"Germany">
+
+enum Department : <"Company departments">
+    ENGINEERING displayName "Engineering" <"Software and hardware engineering">
+    SALES displayName "Sales" <"Sales and business development">
+    MARKETING displayName "Marketing" <"Marketing and communications">
+    HR displayName "Human Resources" <"Human resources and recruitment">
+    FINANCE displayName "Finance" <"Finance and accounting">
+    OPERATIONS displayName "Operations" <"Operations and logistics">
