@@ -8,6 +8,7 @@ import { TypeGraphBuilder } from './graph/TypeGraphBuilder';
 import { TypeGraphPanel } from './views/TypeGraphPanel';
 import { SearchProvider } from './search/SearchProvider';
 import { SearchPanel } from './search/SearchPanel';
+import { ExportProvider, ExportFormat } from './export/ExportProvider';
 import { RosettaType, RosettaEnum } from './models/RosettaAst';
 
 /**
@@ -39,6 +40,9 @@ export function activate(context: vscode.ExtensionContext) {
     // Create search provider
     const searchProvider = new SearchProvider(symbolIndexer);
     const searchPanel = new SearchPanel(searchProvider);
+
+    // Create export provider
+    const exportProvider = new ExportProvider(symbolIndexer, typeGraphBuilder);
 
     // Create tree data provider
     const treeDataProvider = new CdmTreeDataProvider();
@@ -149,6 +153,75 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(
         vscode.commands.registerCommand('cdm.search', async () => {
             await searchPanel.showSearch();
+        })
+    );
+
+    // Register export command
+    context.subscriptions.push(
+        vscode.commands.registerCommand('cdm.export', async () => {
+            // Get current type if cursor is on one
+            const editor = vscode.window.activeTextEditor;
+            let typeName: string | undefined;
+
+            if (editor && editor.document.languageId === 'rosetta') {
+                const position = editor.selection.active;
+                const wordRange = editor.document.getWordRangeAtPosition(position);
+                if (wordRange) {
+                    const word = editor.document.getText(wordRange);
+                    const symbol = symbolIndexer.getSymbol(word);
+                    if (symbol) {
+                        typeName = word;
+                    }
+                }
+            }
+
+            // Ask for export scope
+            const scopeOptions = ['Export all types', 'Export specific type'];
+            if (typeName) {
+                scopeOptions.push(`Export ${typeName}`);
+            }
+
+            const scope = await vscode.window.showQuickPick(scopeOptions, {
+                placeHolder: 'What would you like to export?'
+            });
+
+            if (!scope) {
+                return;
+            }
+
+            // Determine type name based on scope
+            let exportTypeName: string | undefined;
+            if (scope === 'Export specific type') {
+                exportTypeName = await vscode.window.showInputBox({
+                    prompt: 'Enter the type or enum name',
+                    placeHolder: 'e.g., Person, Employee'
+                });
+                if (!exportTypeName) {
+                    return;
+                }
+            } else if (scope.startsWith('Export ') && scope !== 'Export all types') {
+                exportTypeName = typeName;
+            }
+
+            // Ask for format
+            const format = await vscode.window.showQuickPick(
+                [
+                    { label: 'JSON', description: 'Complete type and enum definitions' },
+                    { label: 'Mermaid', description: 'Mermaid diagram for visualization' },
+                    { label: 'GraphViz', description: 'DOT format for Graphviz' }
+                ],
+                {
+                    placeHolder: 'Select export format'
+                }
+            );
+
+            if (!format) {
+                return;
+            }
+
+            // Perform export
+            const exportFormat = format.label.toLowerCase() as ExportFormat;
+            await exportProvider.export(exportFormat, exportTypeName);
         })
     );
 

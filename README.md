@@ -15,6 +15,7 @@ Visual viewer for FINOS Common Domain Model (CDM) written in Rosetta DSL.
 - **Find All References**: Find all usages of types and enums across the workspace with Shift+F12
 - **Type Graph Visualization**: Interactive graph visualization of type relationships using Mermaid.js
 - **Search and Filter**: Quick search for types, enums, and fields with fuzzy matching and advanced filters
+- **Export to Multiple Formats**: Export CDM data to JSON, Mermaid diagrams, or GraphViz DOT files
 
 ## Installation
 
@@ -76,6 +77,11 @@ Visual viewer for FINOS Common Domain Model (CDM) written in Rosetta DSL.
   - Filter by namespace
   - Filter by description presence
   - Navigate directly to search results
+- `CDM: Export to JSON/Mermaid/GraphViz` - Export CDM definitions and graphs
+  - Export all types or specific type with dependencies
+  - JSON format: Complete type and enum definitions with metadata
+  - Mermaid format: Ready-to-use diagram markup for documentation
+  - GraphViz DOT format: Professional graph visualization
 
 ### File Watcher
 
@@ -117,6 +123,8 @@ finos-cdm-viewer/
 │   ├── search/
 │   │   ├── SearchProvider.ts    # Search and filter provider
 │   │   └── SearchPanel.ts       # Search quick pick interface
+│   ├── export/
+│   │   └── ExportProvider.ts    # Export to JSON/Mermaid/GraphViz
 │   ├── views/
 │   │   └── TypeGraphPanel.ts    # WebView panel for graph visualization
 │   ├── providers/
@@ -206,7 +214,7 @@ The extension uses a lightweight regex-based parser that extracts:
 ### Phase 3 (Current)
 - [x] Type graph visualization
 - [x] Search and filter functionality
-- [ ] Export to various formats (JSON, GraphViz)
+- [x] Export to various formats (JSON, Mermaid, GraphViz)
 - [ ] Validation and error highlighting
 - [ ] Code completion for type references
 - [ ] Rename symbol support
