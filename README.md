@@ -22,12 +22,38 @@ Visual viewer for FINOS Common Domain Model (CDM) written in Rosetta DSL.
 
 ## Installation
 
-### Prerequisites
+### Method 1: Install from VSIX (Recommended)
 
+This is the easiest way to install the extension for regular use.
+
+1. Download the latest `finos-cdm-viewer-1.0.0.vsix` file from the [releases page](https://github.com/kkomazaw/finos-cdm-viewer/releases) or build it yourself (see Method 3 below)
+
+2. Install the extension in VS Code:
+   - **Option A: Using VS Code UI**
+     - Open VS Code
+     - Go to Extensions view (Ctrl+Shift+X / Cmd+Shift+X)
+     - Click the `...` menu at the top-right of the Extensions view
+     - Select "Install from VSIX..."
+     - Select the downloaded `finos-cdm-viewer-1.0.0.vsix` file
+
+   - **Option B: Using Command Line**
+     ```bash
+     code --install-extension finos-cdm-viewer-1.0.0.vsix
+     ```
+
+3. Reload VS Code when prompted
+
+4. The extension is now installed and ready to use!
+
+### Method 2: Development Mode
+
+For extension development and debugging.
+
+**Prerequisites:**
 - Visual Studio Code 1.85.0 or higher
 - Node.js 18+ and npm
 
-### Setup
+**Steps:**
 
 1. Clone this repository:
    ```bash
@@ -48,6 +74,26 @@ Visual viewer for FINOS Common Domain Model (CDM) written in Rosetta DSL.
 4. Run the extension in development mode:
    - Press `F5` in VS Code to open a new Extension Development Host window
    - Or use the "Run Extension" debug configuration
+
+### Method 3: Build VSIX from Source
+
+To build your own `.vsix` file for distribution.
+
+1. Follow steps 1-3 from Method 2 above
+
+2. Install the packaging tool:
+   ```bash
+   npm install -g @vscode/vsce
+   ```
+
+3. Build the VSIX package:
+   ```bash
+   vsce package
+   ```
+
+4. This will create `finos-cdm-viewer-1.0.0.vsix` in the project directory
+
+5. Install it using Method 1 above
 
 ## Usage
 
