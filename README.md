@@ -199,6 +199,27 @@ You can configure the extension through VS Code settings:
 - `cdm.sourcePath`: Specify a custom path to Rosetta source files
 - `cdm.enableCache`: Enable/disable file parsing cache (default: true)
 
+## Documentation
+
+### User Guides
+
+For detailed usage instructions and tutorials, see:
+
+- **[User Guide (English)](USER-GUIDE.md)** - Comprehensive guide covering all features with practical examples
+- **[ユーザーガイド (日本語)](USER-GUIDE-ja.md)** - 全機能の詳細な使い方と実践例
+
+### Installation Guides
+
+- **[Installation Instructions (日本語)](INSTALLATION-ja.md)** - 詳細なインストール手順とトラブルシューティング
+
+The user guides include:
+- Step-by-step tutorials for each feature
+- Practical workflow examples
+- Keyboard shortcuts reference
+- Tips and best practices
+- Troubleshooting guide
+- FAQ section
+
 ## Development
 
 ### Project Structure
